@@ -12,7 +12,7 @@
 [Uu]ser[Ss]ettings/
 *.log
 VR_FinalProjectUnity/Assets/OnlineAssets/
-VR_FinalProjectUnity/OnlineAssets.meta
+VR_FinalProjectUnity/Assets/OnlineAssets.meta
 
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
