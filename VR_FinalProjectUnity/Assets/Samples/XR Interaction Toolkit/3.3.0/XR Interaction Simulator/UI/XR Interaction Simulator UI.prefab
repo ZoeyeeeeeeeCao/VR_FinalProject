@@ -26121,8 +26121,10 @@ MonoBehaviour:
   m_ControllerHotkeyBg: {fileID: 3080483111807852381}
   m_ControllerHotkeyIcon: {fileID: 8204039486842106123}
   m_ControllerHotkeyText: {fileID: 2811528528473565518}
-  m_LeftControllerSprite: {fileID: 21300000, guid: c2bc09e4357ee4c6bbb9d0e8ccf7f21d, type: 3}
-  m_RightControllerSprite: {fileID: 21300000, guid: cbd1e2a1a972644eea7bfae3d6f2b979, type: 3}
+  m_LeftControllerSprite: {fileID: 21300000, guid: c2bc09e4357ee4c6bbb9d0e8ccf7f21d,
+    type: 3}
+  m_RightControllerSprite: {fileID: 21300000, guid: cbd1e2a1a972644eea7bfae3d6f2b979,
+    type: 3}
   m_ControllerInputRow: {fileID: 3339236843379809269}
   m_PokePanel: {fileID: 42524817193246771}
   m_PokePanelBg: {fileID: 8661181416575580406}
@@ -26192,8 +26194,10 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_InputActionReferencePerformed: {fileID: 8194751571243181529, guid: 7f59cc19636f04d5cbbc64e77a20787f, type: 3}
-    m_InputActionReferenceValue: {fileID: 8194751571243181529, guid: 7f59cc19636f04d5cbbc64e77a20787f, type: 3}
+    m_InputActionReferencePerformed: {fileID: 8194751571243181529, guid: 7f59cc19636f04d5cbbc64e77a20787f,
+      type: 3}
+    m_InputActionReferenceValue: {fileID: 8194751571243181529, guid: 7f59cc19636f04d5cbbc64e77a20787f,
+      type: 3}
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualPerformed: 0
     m_ManualValue: 0
@@ -26222,8 +26226,10 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
-    m_InputActionReferencePerformed: {fileID: -5413762223967049505, guid: 7f59cc19636f04d5cbbc64e77a20787f, type: 3}
-    m_InputActionReferenceValue: {fileID: -5413762223967049505, guid: 7f59cc19636f04d5cbbc64e77a20787f, type: 3}
+    m_InputActionReferencePerformed: {fileID: -5413762223967049505, guid: 7f59cc19636f04d5cbbc64e77a20787f,
+      type: 3}
+    m_InputActionReferenceValue: {fileID: -5413762223967049505, guid: 7f59cc19636f04d5cbbc64e77a20787f,
+      type: 3}
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualPerformed: 0
     m_ManualValue: 0
