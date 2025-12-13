@@ -6,6 +6,10 @@ TagManager:
   tags:
   - BallPen
   - Paper
+  - FlowerRed
+  - FlowerYellow
+  - FlowerBlue
+  - Shovel
   layers:
   - Default
   - TransparentFX
