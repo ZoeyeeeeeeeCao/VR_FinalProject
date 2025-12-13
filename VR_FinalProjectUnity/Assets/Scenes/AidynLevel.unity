@@ -2220,7 +2220,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -77113,7 +77113,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -87369,7 +87369,7 @@ MonoBehaviour:
   head: {fileID: 465107203}
   distance: 0.7
   heightOffset: -0.1
-  followWhileActive: 0
+  followWhileActive: 1
 --- !u!114 &1779009415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88109,7 +88109,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -104758,7 +104758,7 @@ MonoBehaviour:
   head: {fileID: 465107203}
   distance: 0.7
   heightOffset: -0.1
-  followWhileActive: 0
+  followWhileActive: 1
 --- !u!114 &2068837165
 MonoBehaviour:
   m_ObjectHideFlags: 0
