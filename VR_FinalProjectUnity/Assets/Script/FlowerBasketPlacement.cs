@@ -1,54 +1,43 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using System.Collections;
 
+[RequireComponent(typeof(UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable))]
 public class FlowerBasketPlacement : MonoBehaviour
 {
-    public Vector3 basketScale = Vector3.one * 0.5f;
-    public float scaleTime = 0.25f;
-
     private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
-    private Rigidbody rb;
-    private Vector3 originalScale;
 
     void Awake()
     {
         grab = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
-        rb = GetComponent<Rigidbody>();
-        originalScale = transform.localScale;
-
-        grab.selectEntered.AddListener(OnGrab);
-        grab.selectExited.AddListener(OnRelease);
     }
 
-    void OnGrab(SelectEnterEventArgs args)
+    void OnEnable()
     {
-        StopAllCoroutines();
-        transform.localScale = originalScale;
-        rb.isKinematic = false;
+        grab.selectEntered.AddListener(OnSelectEntered);
+        grab.selectExited.AddListener(OnSelectExited);
     }
 
-    void OnRelease(SelectExitEventArgs args)
+    void OnDisable()
+    {
+        grab.selectEntered.RemoveListener(OnSelectEntered);
+        grab.selectExited.RemoveListener(OnSelectExited);
+    }
+
+    void OnSelectEntered(SelectEnterEventArgs args)
     {
         if (args.interactorObject is UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor)
         {
-            rb.isKinematic = true;
-            StartCoroutine(ScaleTo(basketScale));
+            // Flower placed into basket
+            Debug.Log("Flower placed into basket");
         }
     }
 
-    IEnumerator ScaleTo(Vector3 target)
+    void OnSelectExited(SelectExitEventArgs args)
     {
-        Vector3 start = transform.localScale;
-        float t = 0f;
-
-        while (t < 1f)
+        if (args.interactorObject is UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor)
         {
-            t += Time.deltaTime / scaleTime;
-            transform.localScale = Vector3.Lerp(start, target, t);
-            yield return null;
+            // Flower removed from basket
+            Debug.Log("Flower removed from basket");
         }
-
-        transform.localScale = target;
     }
 }
