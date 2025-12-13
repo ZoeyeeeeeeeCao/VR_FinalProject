@@ -6,19 +6,28 @@ public class PaintWithGrip : MonoBehaviour
 {
     public CwHitBetween hitBetween;
     public InputActionProperty gripAction;
-    public LineRenderer line; // 可选：只在画时显示线
+    public LineRenderer line;
 
     void OnEnable() => gripAction.action?.Enable();
     void OnDisable() => gripAction.action?.Disable();
 
     void Update()
     {
-        bool painting = gripAction.action != null && gripAction.action.ReadValue<float>() > 0.1f;
+        bool inPaintMode = PaintModeManager.PaintMode;
+        bool gripHeld = gripAction.action != null && gripAction.action.ReadValue<float>() > 0.1f;
 
-        // ✅ 关键：不按就彻底停掉 hit 提交
-        if (hitBetween != null) hitBetween.enabled = painting;
+        // 不在上色模式：彻底关闭
+        if (!inPaintMode)
+        {
+            if (hitBetween) hitBetween.enabled = false;
+            if (line) line.enabled = false;
+            return;
+        }
 
-        // 线只在画时显示
-        if (line != null) line.enabled = painting;
+        // 在上色模式：只有按住Grip才启用绘画&显示线
+        if (hitBetween) hitBetween.enabled = gripHeld;
+        if (hitBetween) hitBetween.Pressure = gripHeld ? 1f : 0f;
+
+        if (line) line.enabled = gripHeld;
     }
 }
