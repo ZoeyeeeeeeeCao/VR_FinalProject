@@ -22613,7 +22613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasSlot: {fileID: 1772921365}
   menuToggle: {fileID: 86579016}
-  totalCanvasesAllowed: 3
+  totalCanvasesAllowed: 15
 --- !u!1 &644155071
 GameObject:
   m_ObjectHideFlags: 0
@@ -45228,8 +45228,8 @@ MonoBehaviour:
   maskCamera: {fileID: 1652154361690118968}
   colorCamera: {fileID: 1652154361841835272}
   paperRenderer: {fileID: 7184336588722377159}
-  sourceMask: {fileID: 8400000, guid: ee3ce66af03ea8a4cb8e765aa3ce9347, type: 2}
-  sourceColor: {fileID: 8400000, guid: 34e3b3f49fda3b34a83ddf86cffad4f7, type: 2}
+  sourceMask: {fileID: 8400000, guid: c75603bc75b29df499f1968bc57a9c54, type: 2}
+  sourceColor: {fileID: 8400000, guid: 2f5f7cfed5e01354dbf83b7c3a338041, type: 2}
   maskProperty: _MaskRT
   colorProperty: _ColorRT
 --- !u!1 &1083078037
@@ -91081,7 +91081,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ca1cf1b416770034f9725a17f7038913, type: 2}
+  - {fileID: 2100000, guid: fdf9c052b99d508449e8d73cdd4e1e15, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
