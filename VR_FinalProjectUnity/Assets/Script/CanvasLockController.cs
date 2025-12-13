@@ -1,35 +1,38 @@
 using UnityEngine;
-
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class CanvasLockController : MonoBehaviour
 {
-    public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
-    public Transform easelSlot;
+    public XRGrabInteractable grab;
 
-    private bool isLocked = true;
+    [HideInInspector] public bool isLocked;
 
     void Awake()
     {
-        if (!grab)
-            grab = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
-
-        LockCanvas();
+        if (!grab) grab = GetComponent<XRGrabInteractable>();
     }
 
-    public void UnlockCanvas()
-    {
-        isLocked = false;
-        grab.enabled = true;
-    }
-
-    public void LockCanvas()
+    public void LockTo(Transform slot)
     {
         isLocked = true;
-        grab.enabled = false;
 
-        // Snap back to easel
-        transform.position = easelSlot.position;
-        transform.rotation = easelSlot.rotation;
-        transform.SetParent(easelSlot);
+        // Stop grabbing
+        if (grab) grab.enabled = false;
+
+        // Snap + parent
+        transform.SetParent(slot, true);
+        transform.position = slot.position;
+        transform.rotation = slot.rotation;
+    }
+
+    public void Unlock()
+    {
+        isLocked = false;
+
+        // Unparent so it can move freely
+        transform.SetParent(null, true);
+
+        if (grab) grab.enabled = true;
     }
 }
