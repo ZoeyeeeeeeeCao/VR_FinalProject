@@ -11,10 +11,6 @@ GameObject:
   - component: {fileID: 4146699328196398746}
   - component: {fileID: 7413186979134039825}
   - component: {fileID: 4163787429987626150}
-  - component: {fileID: 2433685170035094813}
-  - component: {fileID: 7778223121717976908}
-  - component: {fileID: 5814225532140584763}
-  - component: {fileID: 5061165908499451777}
   m_Layer: 0
   m_Name: Dandelion__Cylinder.004_Plants
   m_TagString: Untagged
@@ -87,13 +83,49 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &2433685170035094813
+--- !u!1 &4635020478255035422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3149377832157478207}
+  - component: {fileID: 8213070776189287074}
+  - component: {fileID: 7573638691898039508}
+  - component: {fileID: 2082742152456099963}
+  - component: {fileID: 1792403902807445252}
+  m_Layer: 0
+  m_Name: DisplayDandelion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3149377832157478207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635020478255035422}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.031029359, y: 0.9969997, z: 0.039850667, w: -0.058658727}
+  m_LocalPosition: {x: 2.993, y: -1.113, z: -7.85}
+  m_LocalScale: {x: 2.2728, y: 2.2728, z: 2.2728}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4146699328196398746}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: -4.348, y: 186.88, z: -3.827}
+--- !u!54 &8213070776189287074
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336844954420790956}
+  m_GameObject: {fileID: 4635020478255035422}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -114,13 +146,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7778223121717976908
+--- !u!114 &7573638691898039508
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336844954420790956}
+  m_GameObject: {fileID: 4635020478255035422}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
@@ -128,7 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
   m_Colliders:
-  - {fileID: 5814225532140584763}
+  - {fileID: 1792403902807445252}
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
@@ -244,13 +276,26 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
---- !u!65 &5814225532140584763
+--- !u!114 &2082742152456099963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4635020478255035422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33ba55ae41b6546c685b6eb57f0dda1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 2
+--- !u!65 &1792403902807445252
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336844954420790956}
+  m_GameObject: {fileID: 4635020478255035422}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -263,50 +308,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.22318707, y: 0.44724196, z: 0.27703506}
-  m_Center: {x: 0.02737251, y: 0.22238898, z: -0.02166351}
---- !u!114 &5061165908499451777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336844954420790956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33ba55ae41b6546c685b6eb57f0dda1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 2
---- !u!1 &4635020478255035422
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3149377832157478207}
-  m_Layer: 0
-  m_Name: DisplayDandelion
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3149377832157478207
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635020478255035422}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.031029359, y: 0.9969997, z: 0.039850667, w: -0.058658727}
-  m_LocalPosition: {x: 2.993, y: -1.113, z: -7.85}
-  m_LocalScale: {x: 2.2728, y: 2.2728, z: 2.2728}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4146699328196398746}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -4.348, y: 186.88, z: -3.827}
+  m_Size: {x: 0.36592948, y: 0.59841955, z: 0.4371586}
+  m_Center: {x: 0.056533217, y: 0.26746166, z: 0.045759723}

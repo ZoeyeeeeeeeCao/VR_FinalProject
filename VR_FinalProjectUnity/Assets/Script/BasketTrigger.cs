@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class BasketTrigger : MonoBehaviour
 {
-    public BasketLogic basket;
+    private BasketLogic basket;
 
-    private void OnTriggerEnter(Collider other)
+    void Awake()
+    {
+        basket = GetComponentInParent<BasketLogic>();
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         basket.CollectFlower(other.gameObject);
     }
