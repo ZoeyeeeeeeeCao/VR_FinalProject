@@ -9,10 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 690929a59dc7a42da9030305190d391f, type: 3}
-  m_Name: XRDeviceSimulatorSettings
+  m_Script: {fileID: 11500000, guid: bfda56da833e2384a9677cd3c976a436, type: 3}
+  m_Name: EarthquakeTransition
   m_EditorClassIdentifier: 
-  m_AutomaticallyInstantiateSimulatorPrefab: 0
-  m_AutomaticallyInstantiateInEditorOnly: 1
-  m_UseClassic: 0
-  m_SimulatorPrefab: {fileID: 0}
+  m_Version: 0
+  m_Tracks: []
+  m_FixedDuration: 0
+  m_EditorSettings:
+    m_Framerate: 60
+    m_ScenePreview: 1
+  m_DurationMode: 0
+  m_MarkerTrack: {fileID: 0}
