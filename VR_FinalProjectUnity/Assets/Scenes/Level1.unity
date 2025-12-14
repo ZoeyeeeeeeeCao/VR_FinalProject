@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: d7676232717e8a422865ebfb25670306,
+  m_LightingDataAsset: {fileID: 112000000, guid: b985891a5bcc54352bb4a72b82089b92,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 9bbeea35e0d5c963697bcd2ad5c1f9d4,
     type: 2}
@@ -32949,7 +32949,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1644188046}
-  - component: {fileID: 1644188045}
   - component: {fileID: 1644188044}
   - component: {fileID: 1644188043}
   - component: {fileID: 1644188042}
@@ -32983,7 +32982,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -33007,8 +33006,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.67866325, y: 0.18720531, z: 0.67403984}
-  m_Center: {x: -0.0011558533, y: 0.4965577, z: -0.0011560917}
+  m_Size: {x: 0.67866325, y: 0.6011934, z: 0.67403984}
+  m_Center: {x: -0.0011558533, y: 0.28956366, z: -0.0011560917}
 --- !u!114 &1644188044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33026,62 +33025,20 @@ MonoBehaviour:
     slot: {fileID: 810291623}
     displayPrefab: {fileID: 4763978006156893137, guid: 1d6b790ad9b8f4a229a8e6f900d699a9,
       type: 3}
+    realFlowerPrefab: {fileID: 5648752604863767601, guid: 84a5a8592f7d948909e8fa60a4545e4c,
+      type: 3}
   - type: 2
     slot: {fileID: 1388320581}
     displayPrefab: {fileID: 4635020478255035422, guid: c08388e971b5141e6832e41e531bb47e,
+      type: 3}
+    realFlowerPrefab: {fileID: 6805573006992166110, guid: c447defa93e1d41bba0dc19f4c49cccb,
       type: 3}
   - type: 1
     slot: {fileID: 790933664}
     displayPrefab: {fileID: 2698929828461326948, guid: 67a0fbf0f47c745378d645841a93e8fe,
       type: 3}
---- !u!114 &1644188045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1644188041}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60523e0647cc6ab43acc73cb266a32a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InteractionManager: {fileID: 274539403}
-  m_InteractionLayers:
-    m_Bits: 2
-  m_Handedness: 0
-  m_AttachTransform: {fileID: 0}
-  m_KeepSelectedTargetValid: 0
-  m_DisableVisualsWhenBlockedInGroup: 1
-  m_StartingSelectedInteractable: {fileID: 0}
-  m_StartingTargetFilter: {fileID: 0}
-  m_AutoFindParentInteractableInHierarchy: 0
-  m_ParentInteractableObject: {fileID: 0}
-  m_HoverEntered:
-    m_PersistentCalls:
-      m_Calls: []
-  m_HoverExited:
-    m_PersistentCalls:
-      m_Calls: []
-  m_SelectEntered:
-    m_PersistentCalls:
-      m_Calls: []
-  m_SelectExited:
-    m_PersistentCalls:
-      m_Calls: []
-  m_StartingHoverFilters: []
-  m_StartingSelectFilters: []
-  m_ShowInteractableHoverMeshes: 0
-  m_InteractableHoverMeshMaterial: {fileID: 0}
-  m_InteractableCantHoverMeshMaterial: {fileID: 0}
-  m_SocketActive: 1
-  m_InteractableHoverScale: 1
-  m_RecycleDelayTime: 1
-  m_HoverSocketSnapping: 0
-  m_SocketSnappingRadius: 0.1
-  m_SocketScaleMode: 2
-  m_FixedScale: {x: 0.6, y: 0.6, z: 0.6}
-  m_TargetBoundsSize: {x: 0.5, y: 0.5, z: 0.5}
+    realFlowerPrefab: {fileID: 5731756131437542892, guid: b927607ffc72247c9a280d09cfa6ce77,
+      type: 3}
 --- !u!4 &1644188046
 Transform:
   m_ObjectHideFlags: 0
@@ -33091,7 +33048,7 @@ Transform:
   m_GameObject: {fileID: 1644188041}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.8442, y: -10.573, z: -3.984}
+  m_LocalPosition: {x: -2.8442, y: -10.544, z: -3.984}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -33222,7 +33179,7 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
-  m_FarAttachMode: 0
+  m_FarAttachMode: 1
   m_LimitLinearVelocity: 0
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
