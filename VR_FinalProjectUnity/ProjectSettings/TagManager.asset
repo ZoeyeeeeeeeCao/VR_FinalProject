@@ -11,6 +11,7 @@ TagManager:
   - FlowerYellow
   - FlowerBlue
   - Powder
+  - Kettle
   layers:
   - Default
   - TransparentFX
