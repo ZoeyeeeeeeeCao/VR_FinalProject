@@ -17,9 +17,7 @@ public class FlowerSnapZone : MonoBehaviour
 
     public bool parentToSlot = true;
     public bool makeKinematic = true;
-    public bool disableGrabWhileSnapped = true;
 
-    // 当前已放入的花（顺序 = slot 顺序）
     public IReadOnlyList<GameObject> CurrentFlowers => _flowers;
     private readonly List<GameObject> _flowers = new List<GameObject>(4);
 
@@ -38,14 +36,11 @@ public class FlowerSnapZone : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // 找 root（避免子 collider）
         Transform root = other.attachedRigidbody
             ? other.attachedRigidbody.transform.root
             : other.transform.root;
 
-        // ✅ 判断是否是合法花 Tag
         if (!IsFlowerTag(root.tag)) return;
-
         if (_flowers.Contains(root.gameObject)) return;
 
         int slotIndex = GetFirstEmptySlotIndex();
@@ -53,8 +48,6 @@ public class FlowerSnapZone : MonoBehaviour
 
         SnapFlowerToSlot(root.gameObject, slots[slotIndex]);
         _flowers.Add(root.gameObject);
-
-        Debug.Log($"[FlowerSnapZone] 🌸 {root.name} snapped to slot {slotIndex}");
     }
 
     bool IsFlowerTag(string tag)
@@ -69,7 +62,7 @@ public class FlowerSnapZone : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i] == null) continue;
-            if (parentToSlot && slots[i].childCount > 0) continue;
+            if (slots[i].childCount > 0) continue;
             return i;
         }
         return -1;
@@ -77,8 +70,9 @@ public class FlowerSnapZone : MonoBehaviour
 
     void SnapFlowerToSlot(GameObject flower, Transform slot)
     {
-        // 1️⃣ 强制放手
         var grab = flower.GetComponentInChildren<XRGrabInteractable>();
+
+        // Force release
         if (grab != null && grab.isSelected)
         {
             var mgr = FindObjectOfType<XRInteractionManager>();
@@ -86,11 +80,11 @@ public class FlowerSnapZone : MonoBehaviour
                 mgr.SelectExit(grab.firstInteractorSelecting, grab);
         }
 
-        // 2️⃣ 记录原始 scale
+        // Store original scale
         if (!_originalScale.ContainsKey(flower))
             _originalScale[flower] = flower.transform.localScale;
 
-        // 3️⃣ 关物理
+        // Disable physics
         var rb = flower.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -99,22 +93,44 @@ public class FlowerSnapZone : MonoBehaviour
             if (makeKinematic) rb.isKinematic = true;
         }
 
-        // 4️⃣ 吸附
+        // Snap
         flower.transform.SetPositionAndRotation(slot.position, slot.rotation);
-
-        // 5️⃣ 缩放
         flower.transform.localScale = _originalScale[flower] * snappedScaleMultiplier;
 
-        // 6️⃣ parent（防乱飞）
-        if (parentToSlot)
-            flower.transform.SetParent(slot, true);
+        // Parent to slot
+        flower.transform.SetParent(slot, true);
 
-        // 7️⃣ 禁用抓取
-        if (disableGrabWhileSnapped && grab != null)
-            grab.enabled = false;
+        // Listen for grab to REMOVE it
+        if (grab != null)
+        {
+            grab.selectEntered.RemoveListener(OnFlowerGrabbed);
+            grab.selectEntered.AddListener(OnFlowerGrabbed);
+        }
     }
 
-    // 给你后面系统用
+    void OnFlowerGrabbed(SelectEnterEventArgs args)
+    {
+        var grab = args.interactableObject as XRGrabInteractable;
+        if (grab == null) return;
+
+        GameObject flower = grab.transform.root.gameObject;
+
+        // Restore scale
+        if (_originalScale.TryGetValue(flower, out var original))
+            flower.transform.localScale = original;
+
+        // Detach from slot (THIS FREES THE SLOT)
+        flower.transform.SetParent(null, true);
+
+        // Restore physics
+        var rb = flower.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = false;
+
+        // Remove from tracking list
+        _flowers.Remove(flower);
+    }
+
     public void ClearAllFlowers(bool destroy)
     {
         foreach (var f in _flowers)
@@ -122,6 +138,7 @@ public class FlowerSnapZone : MonoBehaviour
             if (f == null) continue;
             if (destroy) Destroy(f);
         }
+
         _flowers.Clear();
         _originalScale.Clear();
     }

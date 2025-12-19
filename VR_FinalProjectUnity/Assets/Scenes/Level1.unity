@@ -13400,7 +13400,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -32391,10 +32391,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 672355229}
+  - {fileID: 782823308}
+  - {fileID: 1577086508}
+  - {fileID: 1372632642}
   flowerTags:
   - FlowerRed
   - FlowerBlue
@@ -32402,7 +32402,6 @@ MonoBehaviour:
   snappedScaleMultiplier: 0.4
   parentToSlot: 1
   makeKinematic: 1
-  disableGrabWhileSnapped: 1
 --- !u!54 &1536926936
 Rigidbody:
   m_ObjectHideFlags: 0
