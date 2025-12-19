@@ -1,69 +1,49 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class QuakeController : MonoBehaviour
 {
-    [Header("Mode Groups")]
     public GameObject level2Group;
     public GameObject level3Group;
 
-    [Header("Painted Canvases")]
-    public CanvasLockController[] canvases; // 1..3 (from PaintSession)
-    public Transform[] wallHooks;           // 1..3
+    public Rigidbody[] apartmentCanvasRBs;
+    public XRGrabInteractable[] apartmentCanvasGrabs;
 
-    [Header("Drop Force")]
     public float dropImpulse = 0.15f;
 
-    // Called at quake start
-    public void BeginEarthquake()
+    public void Begin()
     {
         if (level2Group) level2Group.SetActive(false);
 
-        // Keep canvases visible & move them to the walls for the cinematic moment
-        for (int i = 0; i < canvases.Length && i < wallHooks.Length; i++)
-        {
-            var c = canvases[i];
-            if (!c) continue;
+        // keep them ungrabbable during cinematic
+        foreach (var g in apartmentCanvasGrabs)
+            if (g) g.enabled = false;
 
-            c.LockTo(wallHooks[i]); // snap to wall
-            var rb = c.GetComponent<Rigidbody>();
-            if (rb)
-            {
-                rb.isKinematic = true;
-                rb.useGravity = false;
-            }
-        }
+        Debug.Log("QUAKE Begin called");
     }
 
-    // Called at the “drop” moment
-    public void DropCanvases()
+    public void Drop()
     {
-        foreach (var c in canvases)
+        foreach (var rb in apartmentCanvasRBs)
         {
-            if (!c) continue;
-
-            // unparent so physics can act
-            c.transform.SetParent(null, true);
-
-            var rb = c.GetComponent<Rigidbody>();
-            if (rb)
-            {
-                rb.isKinematic = false;
-                rb.useGravity = true;
-                rb.AddForce(Random.insideUnitSphere * dropImpulse, ForceMode.Impulse);
-            }
-
-            // optional: keep grabbing disabled until Level 3 starts
-            if (c.grab) c.grab.enabled = false;
+            if (!rb) continue;
+            rb.transform.SetParent(null, true);
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.AddForce(Random.insideUnitSphere * dropImpulse, ForceMode.Impulse);
         }
+
+        Debug.Log("QUAKE DROP called");
     }
 
-    // Called at the end
-    public void EndEarthquake()
+    public void End()
     {
         if (level3Group) level3Group.SetActive(true);
 
-        // Now enable grabbing for canvases so player can pick them up
-        foreach (var c in canvases)
-            if (c && c.grab) c.grab.enabled = true;
+        // now the player can pick them up and re-socket
+        foreach (var g in apartmentCanvasGrabs)
+            if (g) g.enabled = true;
+
+        Debug.Log("QUAKE END called");
     }
 }
