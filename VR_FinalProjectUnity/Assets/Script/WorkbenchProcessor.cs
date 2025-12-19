@@ -30,22 +30,17 @@ public class WorkbenchColorMixer : MonoBehaviour
     public string yellowFlowerTag = "FlowerYellow";
     public string blueFlowerTag = "FlowerBlue";
 
+    [Header("Snap Zone (IMPORTANT)")]
+    public FlowerSnapZone flowerSnapZone; // ✅ 拖你的 FlowerSnapZone 物体进来
+
     [Header("Debug")]
     public bool debugLog = true;
 
-    // 当前轮模式
     FlowerMode mode = FlowerMode.None;
-
-    // 当前在 Zone 内的同色花（root）
     readonly HashSet<Transform> flowersInZone = new HashSet<Transform>();
 
-    // 追踪粉末是否还在台上（粉末在 -> 锁定不允许开始新轮）
     bool powderInside = false;
-
-    // 搅拌计数
     int stirCount = 0;
-
-    // 防止 shovel 在 zone 内抖动导致多次 Enter
     bool shovelInside = false;
 
     Coroutine popupRoutine;
@@ -56,7 +51,6 @@ public class WorkbenchColorMixer : MonoBehaviour
         if (colorMismatchCanvas) colorMismatchCanvas.SetActive(false);
     }
 
-    // ---------- Trigger ----------
     void OnTriggerEnter(Collider other)
     {
         Transform root = GetRoot(other);
@@ -70,7 +64,7 @@ public class WorkbenchColorMixer : MonoBehaviour
             return;
         }
 
-        // 铲子进入：要么弹“花不够”，要么计搅拌
+        // 铲子进入
         if (root.CompareTag(shovelTag))
         {
             if (shovelInside) return;
@@ -78,20 +72,17 @@ public class WorkbenchColorMixer : MonoBehaviour
 
             if (powderInside)
             {
-                // 粉末还在，不允许继续加工（你也可以选择弹提示，但你没要求）
                 if (debugLog) Debug.Log("[Workbench] Shovel enter but powder still inside -> ignore");
                 return;
             }
 
             if (mode == FlowerMode.None || flowersInZone.Count < requiredFlowers)
             {
-                // 花不够或还没开始模式
                 ShowPopup(flowerNotEnoughCanvas);
                 if (debugLog) Debug.Log($"[Workbench] Not enough flowers: {flowersInZone.Count}/{requiredFlowers}");
                 return;
             }
 
-            // 花够了，计搅拌
             stirCount++;
             if (debugLog) Debug.Log($"[Workbench] Stir {stirCount}/{requiredShovelEnters}");
 
@@ -104,23 +95,20 @@ public class WorkbenchColorMixer : MonoBehaviour
 
         // 花进入：决定模式/检查颜色
         FlowerMode incoming = GetFlowerModeByTag(root.tag);
-        if (incoming == FlowerMode.None) return; // 不是我们关心的花
+        if (incoming == FlowerMode.None) return;
 
         if (powderInside)
         {
-            // 粉末还在台上：本轮没结束，不接受新花（也可以弹 mismatch，但你需求是“粉末拿走后才能开始新轮”）
             if (debugLog) Debug.Log("[Workbench] Flower entered but powder still inside -> ignore");
             return;
         }
 
-        // 如果工作台是空的（mode None + 当前没有花），第一个花决定模式
         if (mode == FlowerMode.None && flowersInZone.Count == 0)
         {
             mode = incoming;
             if (debugLog) Debug.Log("[Workbench] Mode set to: " + mode);
         }
 
-        // 颜色不匹配：弹提示，不计入
         if (incoming != mode)
         {
             ShowPopup(colorMismatchCanvas);
@@ -128,7 +116,6 @@ public class WorkbenchColorMixer : MonoBehaviour
             return;
         }
 
-        // 同色：加入集合
         flowersInZone.Add(root);
         if (debugLog) Debug.Log($"[Workbench] Flowers in zone: {flowersInZone.Count}/{requiredFlowers} mode={mode}");
     }
@@ -142,7 +129,6 @@ public class WorkbenchColorMixer : MonoBehaviour
         {
             powderInside = false;
             if (debugLog) Debug.Log("[Workbench] Powder removed -> can start new round when empty");
-            // 粉末拿走后，如果台上也没有花了，则完全重置
             TryResetIfEmpty();
             return;
         }
@@ -156,25 +142,19 @@ public class WorkbenchColorMixer : MonoBehaviour
         FlowerMode outgoing = GetFlowerModeByTag(root.tag);
         if (outgoing == FlowerMode.None) return;
 
-        // 花离开
         bool removed = flowersInZone.Remove(root);
         if (removed && debugLog) Debug.Log($"[Workbench] Flower left, remaining: {flowersInZone.Count}/{requiredFlowers}");
 
-        // 你说：放了1朵又拿走 -> 回到初始
-        // 所以：只要台上花变少，就把搅拌清零（避免“搅过的进度”被带走）
         stirCount = 0;
-
         TryResetIfEmpty();
     }
 
-    // ---------- Core ----------
     void ProcessToPowder()
     {
         if (powderInside) return;
         if (mode == FlowerMode.None) return;
         if (flowersInZone.Count < requiredFlowers) return;
 
-        // 选对应粉末
         GameObject powderPrefab = GetPowderPrefab(mode);
         if (powderPrefab == null)
         {
@@ -182,7 +162,7 @@ public class WorkbenchColorMixer : MonoBehaviour
             return;
         }
 
-        // 销毁 4 朵（如果你可能放 >4，只销毁4朵）
+        // 收集要销毁的4朵花
         List<Transform> toDestroy = new List<Transform>(requiredFlowers);
         foreach (var f in flowersInZone)
         {
@@ -196,19 +176,22 @@ public class WorkbenchColorMixer : MonoBehaviour
 
         Instantiate(powderPrefab, pos, rot);
 
+        // ✅ 先通知 FlowerSnapZone 重置slot（避免 Destroy 后 slot 还占用）
+        if (flowerSnapZone != null)
+            flowerSnapZone.ResetSlotsAfterProcessing(false);
+
+        // Destroy 4 flowers
         for (int i = 0; i < toDestroy.Count; i++)
             if (toDestroy[i] != null) Destroy(toDestroy[i].gameObject);
 
         flowersInZone.Clear();
         stirCount = 0;
 
-        // 注意：生成出来的粉末要有 Tag=Powder + Collider + Rigidbody(kine) 这样才能被 zone 识别为 powderInside
         if (debugLog) Debug.Log($"✅ Processed {mode} -> powder spawned. Workbench locked until powder removed.");
     }
 
     void TryResetIfEmpty()
     {
-        // 只有当：没有花 && 没有粉末，才算“工作台空” -> 允许新模式
         if (flowersInZone.Count == 0 && powderInside == false)
         {
             mode = FlowerMode.None;
@@ -217,7 +200,6 @@ public class WorkbenchColorMixer : MonoBehaviour
         }
     }
 
-    // ---------- Helpers ----------
     void ShowPopup(GameObject canvas)
     {
         if (canvas == null) return;
@@ -228,7 +210,6 @@ public class WorkbenchColorMixer : MonoBehaviour
 
     IEnumerator PopupCo(GameObject canvas)
     {
-        // 先关掉两个，避免重叠
         if (flowerNotEnoughCanvas) flowerNotEnoughCanvas.SetActive(false);
         if (colorMismatchCanvas) colorMismatchCanvas.SetActive(false);
 

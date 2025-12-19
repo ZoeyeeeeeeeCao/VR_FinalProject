@@ -25656,6 +25656,7 @@ MonoBehaviour:
   redFlowerTag: FlowerRed
   yellowFlowerTag: FlowerYellow
   blueFlowerTag: FlowerBlue
+  flowerSnapZone: {fileID: 1536926935}
   debugLog: 1
 --- !u!54 &1231640765
 Rigidbody:
@@ -32402,6 +32403,7 @@ MonoBehaviour:
   snappedScaleMultiplier: 0.4
   parentToSlot: 1
   makeKinematic: 1
+  debugLog: 0
 --- !u!54 &1536926936
 Rigidbody:
   m_ObjectHideFlags: 0

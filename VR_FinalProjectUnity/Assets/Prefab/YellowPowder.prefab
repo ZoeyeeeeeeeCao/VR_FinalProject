@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8550047230072197872}
   m_Layer: 0
   m_Name: YellowPowder
-  m_TagString: Untagged
+  m_TagString: Powder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
