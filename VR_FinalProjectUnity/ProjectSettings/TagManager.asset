@@ -6,10 +6,12 @@ TagManager:
   tags:
   - BallPen
   - Paper
+  - Shovel
   - FlowerRed
   - FlowerYellow
   - FlowerBlue
-  - Shovel
+  - Powder
+  - Kettle
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - ApartmentCanvas
+  - PlayerCanvas
   - 
   - 
   - 
