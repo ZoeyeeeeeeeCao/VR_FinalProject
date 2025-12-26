@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 8675077496337970586}
   - component: {fileID: 3020779250506324396}
   - component: {fileID: 1954668330710084387}
+  - component: {fileID: 1669930878493301586}
   m_Layer: 0
   m_Name: DisplayRose
   m_TagString: Untagged
@@ -310,3 +311,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.89277035, y: 1.0871062, z: 0.9595574}
   m_Center: {x: -0.02367839, y: 0.44530964, z: -0.07942167}
+--- !u!114 &1669930878493301586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4763978006156893137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 164889286190141d88b28dc3ff5d9c85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whoosh: {fileID: 8300000, guid: 0d6017d16273049c6b1011f5d176e6d8, type: 3}
