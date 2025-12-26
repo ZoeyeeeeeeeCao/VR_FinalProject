@@ -11,6 +11,10 @@ public class BasketTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //  Do NOT collect while basket is locked/snapped
+        if (basket.IsLockedToTable)
+            return;
+
         basket.CollectFlower(other.gameObject);
     }
 }

@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 143985466190487784}
   m_Layer: 0
   m_Name: Dandelion__Cylinder.004_Plants
-  m_TagString: Untagged
+  m_TagString: FlowerYellow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 4717972383938339453}
   m_Layer: 0
   m_Name: 'RealDandelion  '
-  m_TagString: Untagged
+  m_TagString: FlowerYellow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
