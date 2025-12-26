@@ -28,6 +28,12 @@ public class WorkbenchMixZone : MonoBehaviour
     [Header("Options")]
     public bool lockGrabbableWhileSnapped = true;
 
+    // ✅ AUDIO (ADDED ONLY)
+    [Header("SFX")]
+    public AudioClip waterToPowderSfx;   // W1
+    public AudioClip powderToColorSfx;   // click2
+    AudioSource sfxSource;
+
     GameObject currentPowder;
     PowderType currentPowderType;
 
@@ -39,6 +45,11 @@ public class WorkbenchMixZone : MonoBehaviour
     Rigidbody kettleRb;
     bool kettleRbHad;
     bool kettleRbWasKinematic;
+
+    void Awake() // ✅ ADDED ONLY
+    {
+        sfxSource = GetComponent<AudioSource>();
+    }
 
     void Reset()
     {
@@ -123,9 +134,7 @@ public class WorkbenchMixZone : MonoBehaviour
 
         Debug.Log($"[WorkbenchMixZone] ✅ Powder snapped to {powderSnap.position}");
         Debug.Log($"PowderSnap local: {powderSnap.localPosition}  world: {powderSnap.position}");
-
     }
-
 
     void TryStartKettleProcess(Transform kettleRoot)
     {
@@ -168,6 +177,10 @@ public class WorkbenchMixZone : MonoBehaviour
 
         if (lockGrabbableWhileSnapped)
             SetGrabEnabled(kettleRoot.gameObject, false);
+
+        // ✅ PLAY W1 EXACTLY WHEN POUR STARTS (ADDED ONLY)
+        if (sfxSource != null && waterToPowderSfx != null)
+            sfxSource.PlayOneShot(waterToPowderSfx);
 
         Debug.Log("[WorkbenchMixZone] 🔥 Trigger animation");
         currentKettleAnimator.ResetTrigger(pourTrigger);
@@ -229,11 +242,16 @@ public class WorkbenchMixZone : MonoBehaviour
             return;
         }
 
+        // ✅ PLAY CLICK2 EXACTLY WHEN POWDER BECOMES PAINT (ADDED ONLY)
+        if (sfxSource != null && powderToColorSfx != null)
+            sfxSource.PlayOneShot(powderToColorSfx);
+
         Instantiate(prefab, powderSnap.position, powderSnap.rotation);
         Destroy(currentPowder);
 
         currentPowder = null;
         currentPowderType = null;
+        
     }
 
     GameObject FindPaintPrefab(ColorKind kind)
@@ -264,4 +282,5 @@ public class WorkbenchMixZone : MonoBehaviour
         var grab = go.GetComponentInChildren<XRGrabInteractable>();
         if (grab != null) grab.enabled = enabled;
     }
+    
 }
