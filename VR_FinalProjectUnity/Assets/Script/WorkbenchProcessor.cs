@@ -31,10 +31,16 @@ public class WorkbenchColorMixer : MonoBehaviour
     public string blueFlowerTag = "FlowerBlue";
 
     [Header("Snap Zone (IMPORTANT)")]
-    public FlowerSnapZone flowerSnapZone; // ✅ 拖你的 FlowerSnapZone 物体进来
+    public FlowerSnapZone flowerSnapZone;
 
     [Header("Debug")]
     public bool debugLog = true;
+
+    // 🔊 ADD: SFX
+    [Header("SFX")]
+    public AudioClip shovelHitSfx;   // O1
+    public AudioClip powderSpawnSfx; // W2
+    private AudioSource audioSource;
 
     FlowerMode mode = FlowerMode.None;
     readonly HashSet<Transform> flowersInZone = new HashSet<Transform>();
@@ -49,6 +55,9 @@ public class WorkbenchColorMixer : MonoBehaviour
     {
         if (flowerNotEnoughCanvas) flowerNotEnoughCanvas.SetActive(false);
         if (colorMismatchCanvas) colorMismatchCanvas.SetActive(false);
+
+        // 🔊 ADD: get AudioSource (NO logic change)
+        audioSource = GetComponent<AudioSource>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -56,7 +65,6 @@ public class WorkbenchColorMixer : MonoBehaviour
         Transform root = GetRoot(other);
         if (root == null) return;
 
-        // 粉末进入：锁定
         if (root.CompareTag(powderTag))
         {
             powderInside = true;
@@ -64,7 +72,6 @@ public class WorkbenchColorMixer : MonoBehaviour
             return;
         }
 
-        // 铲子进入
         if (root.CompareTag(shovelTag))
         {
             if (shovelInside) return;
@@ -84,6 +91,11 @@ public class WorkbenchColorMixer : MonoBehaviour
             }
 
             stirCount++;
+
+            // 🔊 ADD: play hit sound each valid shovel hit
+            if (audioSource != null && shovelHitSfx != null)
+                audioSource.PlayOneShot(shovelHitSfx);
+
             if (debugLog) Debug.Log($"[Workbench] Stir {stirCount}/{requiredShovelEnters}");
 
             if (stirCount >= requiredShovelEnters)
@@ -93,7 +105,6 @@ public class WorkbenchColorMixer : MonoBehaviour
             return;
         }
 
-        // 花进入：决定模式/检查颜色
         FlowerMode incoming = GetFlowerModeByTag(root.tag);
         if (incoming == FlowerMode.None) return;
 
@@ -162,7 +173,6 @@ public class WorkbenchColorMixer : MonoBehaviour
             return;
         }
 
-        // 收集要销毁的4朵花
         List<Transform> toDestroy = new List<Transform>(requiredFlowers);
         foreach (var f in flowersInZone)
         {
@@ -176,11 +186,13 @@ public class WorkbenchColorMixer : MonoBehaviour
 
         Instantiate(powderPrefab, pos, rot);
 
-        // ✅ 先通知 FlowerSnapZone 重置slot（避免 Destroy 后 slot 还占用）
+        // 🔊 ADD: play powder sound when powder spawns
+        if (audioSource != null && powderSpawnSfx != null)
+            audioSource.PlayOneShot(powderSpawnSfx);
+
         if (flowerSnapZone != null)
             flowerSnapZone.ResetSlotsAfterProcessing(false);
 
-        // Destroy 4 flowers
         for (int i = 0; i < toDestroy.Count; i++)
             if (toDestroy[i] != null) Destroy(toDestroy[i].gameObject);
 
