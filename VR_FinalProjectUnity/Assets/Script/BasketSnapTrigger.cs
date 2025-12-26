@@ -4,17 +4,7 @@ public class BasketSnapTrigger : MonoBehaviour
 {
     public Transform basketSnapPoint;
 
-    // 🔊 ADD THESE TWO LINES
-    public AudioClip puckSound;
-    private AudioSource audioSource;
-
     private bool hasSnapped = false;
-
-    void Awake()
-    {
-        // 🔊 ADD THIS (does not affect logic)
-        audioSource = GetComponent<AudioSource>();
-    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -26,11 +16,6 @@ public class BasketSnapTrigger : MonoBehaviour
             return;
 
         basket.SnapToTable(basketSnapPoint);
-
-        // 🔊 PLAY SOUND (ONE LINE)
-        if (audioSource != null && puckSound != null)
-            audioSource.PlayOneShot(puckSound);
-
         hasSnapped = true;
     }
 
@@ -40,6 +25,7 @@ public class BasketSnapTrigger : MonoBehaviour
         if (basket == null)
             return;
 
+        // Reset only when basket leaves trigger volume
         hasSnapped = false;
     }
 }
