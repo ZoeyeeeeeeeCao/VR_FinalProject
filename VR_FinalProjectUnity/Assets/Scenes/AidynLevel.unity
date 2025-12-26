@@ -2986,10 +2986,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grab: {fileID: 202524882}
-  grabSfx: {fileID: 8300000, guid: 4f347281f76814335b12d5c00a7e794e, type: 3}
-  volume: 1
-  minInterval: 0.05
   isLocked: 1
+  grabSfx: {fileID: 8300000, guid: 4f347281f76814335b12d5c00a7e794e, type: 3}
+  grabVolume: 1
 --- !u!114 &202524882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90014,10 +90013,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grab: {fileID: 1437113476}
-  grabSfx: {fileID: 0}
-  volume: 1
-  minInterval: 0.05
   isLocked: 1
+  grabSfx: {fileID: 8300000, guid: 4f347281f76814335b12d5c00a7e794e, type: 3}
+  grabVolume: 1
 --- !u!114 &1437113476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103271,10 +103269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grab: {fileID: 1845044237}
-  grabSfx: {fileID: 0}
-  volume: 1
-  minInterval: 0.05
   isLocked: 1
+  grabSfx: {fileID: 8300000, guid: 4f347281f76814335b12d5c00a7e794e, type: 3}
+  grabVolume: 1
 --- !u!114 &1845044237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119072,7 +119069,7 @@ GameObject:
   - component: {fileID: 1923928876}
   - component: {fileID: 1923928875}
   m_Layer: 0
-  m_Name: BGM_Level2puk
+  m_Name: BGM_Level2pukg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
