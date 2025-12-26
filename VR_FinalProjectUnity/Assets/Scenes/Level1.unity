@@ -1864,6 +1864,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fba1c740cba79a8449cca0ac8bca3812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  paintAppearSfx: {fileID: 8300000, guid: 43c74ba9a4f924714b8b39d15b1471b2, type: 3}
+  sfxSource: {fileID: 124036139}
   powderSnap: {fileID: 1726371752}
   kettleSnapIn: {fileID: 306501551}
   kettleSnapOut: {fileID: 405633081}
@@ -1880,8 +1882,6 @@ MonoBehaviour:
   kettleTag: Kettle
   pourTrigger: Pour
   lockGrabbableWhileSnapped: 0
-  waterToPowderSfx: {fileID: 8300000, guid: 94608d389359443dca0d0b1000e35549, type: 3}
-  powderToColorSfx: {fileID: 8300000, guid: 43c74ba9a4f924714b8b39d15b1471b2, type: 3}
 --- !u!82 &124036139
 AudioSource:
   m_ObjectHideFlags: 0
