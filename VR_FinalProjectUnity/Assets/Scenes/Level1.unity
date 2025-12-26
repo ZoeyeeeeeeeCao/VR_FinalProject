@@ -26096,6 +26096,7 @@ MonoBehaviour:
   debugLog: 1
   shovelHitSfx: {fileID: 8300000, guid: fa6b30ffe7d0749c484aa1f02a11801b, type: 3}
   powderSpawnSfx: {fileID: 8300000, guid: 6c732b38f8f5848fca55edac65bf4ebd, type: 3}
+  errorSfx: {fileID: 8300000, guid: 11cb29f8d757e4905ad0c01a3f34db91, type: 3}
 --- !u!54 &1231640765
 Rigidbody:
   m_ObjectHideFlags: 0
