@@ -8,32 +8,9 @@ public class CanvasLockController : MonoBehaviour
 
     [HideInInspector] public bool isLocked;
 
-    // ✅ NEW (SFX)
-    public AudioClip grabSfx;
-    [Range(0f, 1f)] public float grabVolume = 1f;
-    AudioSource audioSource;
-
     void Awake()
     {
         if (!grab) grab = GetComponent<XRGrabInteractable>();
-
-        // ✅ NEW (SFX)
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-
-        if (grab) grab.selectEntered.AddListener(OnGrabbed); // ✅ NEW
-    }
-
-    void OnDestroy()
-    {
-        if (grab) grab.selectEntered.RemoveListener(OnGrabbed); // ✅ NEW
-    }
-
-    // ✅ NEW
-    void OnGrabbed(SelectEnterEventArgs args)
-    {
-        if (isLocked) return; // don’t play when locked
-        if (grabSfx != null) audioSource.PlayOneShot(grabSfx, grabVolume);
     }
 
     public void LockTo(Transform slot)
