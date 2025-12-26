@@ -3,13 +3,16 @@ using UnityEngine;
 public class BasketSnapTrigger : MonoBehaviour
 {
     public Transform basketSnapPoint;
+
+    // 🔊 ADD THESE TWO LINES
     public AudioClip puckSound;
+    private AudioSource audioSource;
 
     private bool hasSnapped = false;
-    private AudioSource audioSource;
 
     void Awake()
     {
+        // 🔊 ADD THIS (does not affect logic)
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -24,8 +27,8 @@ public class BasketSnapTrigger : MonoBehaviour
 
         basket.SnapToTable(basketSnapPoint);
 
-        // 🔊 PLAY PUCK SOUND
-        if (puckSound != null && audioSource != null)
+        // 🔊 PLAY SOUND (ONE LINE)
+        if (audioSource != null && puckSound != null)
             audioSource.PlayOneShot(puckSound);
 
         hasSnapped = true;
