@@ -3,8 +3,15 @@ using UnityEngine;
 public class BasketSnapTrigger : MonoBehaviour
 {
     public Transform basketSnapPoint;
+    public AudioClip puckSound;
 
     private bool hasSnapped = false;
+    private AudioSource audioSource;
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -16,6 +23,11 @@ public class BasketSnapTrigger : MonoBehaviour
             return;
 
         basket.SnapToTable(basketSnapPoint);
+
+        // 🔊 PLAY PUCK SOUND
+        if (puckSound != null && audioSource != null)
+            audioSource.PlayOneShot(puckSound);
+
         hasSnapped = true;
     }
 
@@ -25,7 +37,6 @@ public class BasketSnapTrigger : MonoBehaviour
         if (basket == null)
             return;
 
-        // Reset only when basket leaves trigger volume
         hasSnapped = false;
     }
 }
