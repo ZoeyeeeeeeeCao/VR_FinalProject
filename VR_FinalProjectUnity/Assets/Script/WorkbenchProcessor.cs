@@ -94,7 +94,10 @@ public class WorkbenchColorMixer : MonoBehaviour
 
             // 🔊 ADD: play hit sound each valid shovel hit
             if (audioSource != null && shovelHitSfx != null)
+            {
                 audioSource.PlayOneShot(shovelHitSfx);
+                Debug.Log("sound Play");
+            }
 
             if (debugLog) Debug.Log($"[Workbench] Stir {stirCount}/{requiredShovelEnters}");
 
