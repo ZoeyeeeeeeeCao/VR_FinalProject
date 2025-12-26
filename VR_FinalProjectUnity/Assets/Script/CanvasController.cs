@@ -2,17 +2,21 @@
 
 public class CanvasController : MonoBehaviour
 {
-    public GameObject canvas; // 拖 Canvas 进来
+    [SerializeField] private GameObject canvasRoot;
 
-    // 显示 Canvas（如果你需要）
-    public void ShowCanvas()
+    void Start()
     {
-        canvas.SetActive(true);
+        if (canvasRoot == null)
+        {
+            Debug.LogError("canvasRoot 没有绑定！请把 Canvas 拖进 Inspector");
+            return;
+        }
+
+        canvasRoot.SetActive(true);  // ✅ 进游戏自动开启
     }
 
-    // 关闭 Canvas（按钮点这个）
     public void CloseCanvas()
     {
-        canvas.SetActive(false);
+        canvasRoot.SetActive(false); // ✅ 按钮关闭
     }
 }
