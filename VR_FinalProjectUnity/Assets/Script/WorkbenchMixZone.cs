@@ -4,6 +4,10 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class WorkbenchMixZone : MonoBehaviour
 {
+    [Header("SFX")]
+public AudioClip paintAppearSfx;     // drag click2 here
+public AudioSource sfxSource;        // optional (or auto-find)
+
     [System.Serializable]
     public class OutputMap
     {
@@ -230,7 +234,9 @@ public class WorkbenchMixZone : MonoBehaviour
         }
 
         Instantiate(prefab, powderSnap.position, powderSnap.rotation);
+        PlaySfx(paintAppearSfx);
         Destroy(currentPowder);
+        
 
         currentPowder = null;
         currentPowderType = null;
@@ -264,4 +270,19 @@ public class WorkbenchMixZone : MonoBehaviour
         var grab = go.GetComponentInChildren<XRGrabInteractable>();
         if (grab != null) grab.enabled = enabled;
     }
+    void PlaySfx(AudioClip clip)
+{
+    if (clip == null) return;
+
+    if (sfxSource == null)
+    {
+        sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        sfxSource.spatialBlend = 0f; // 2D
+    }
+
+    sfxSource.PlayOneShot(clip);
+}
+
 }

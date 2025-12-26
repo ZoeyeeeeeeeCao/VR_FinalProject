@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 1285685355665882419}
   - component: {fileID: 5881130033706438373}
   - component: {fileID: 3280550737886059264}
+  - component: {fileID: -8468497472195245128}
   m_Layer: 0
   m_Name: 'DisplaypeaceLily '
   m_TagString: Untagged
@@ -399,7 +400,7 @@ MonoBehaviour:
   m_Colliders:
   - {fileID: 3280550737886059264}
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 3
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_FocusMode: 1
@@ -547,3 +548,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-8468497472195245128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2698929828461326948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 164889286190141d88b28dc3ff5d9c85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whoosh: {fileID: 8300000, guid: 0d6017d16273049c6b1011f5d176e6d8, type: 3}

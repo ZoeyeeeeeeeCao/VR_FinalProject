@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BasketLogic : MonoBehaviour
 {
@@ -9,55 +11,46 @@ public class BasketLogic : MonoBehaviour
         public FlowerType type;
         public Transform slot;
         public GameObject displayPrefab;
-        public GameObject realFlowerPrefab; // full-size, grabbable prefab
+        public GameObject realFlowerPrefab;
     }
 
     [Header("Flower Slots")]
     public FlowerSlot[] slots;
 
-    [Header("Basket Physics")]
-    [Tooltip("The SOLID collider used for grabbing the basket (NOT the trigger collider).")]
-    public Collider basketBodyCollider;
-
     private Dictionary<FlowerType, int> counts = new Dictionary<FlowerType, int>();
     private Dictionary<FlowerType, GameObject> displays = new Dictionary<FlowerType, GameObject>();
 
+    private XRGrabInteractable basketGrab;
+    private bool isSnappedToTable = false;
+
+    // Expose read-only state
+    public bool IsLockedToTable => isSnappedToTable;
+
+    void Awake()
+    {
+        basketGrab = GetComponent<XRGrabInteractable>();
+    }
+
     // =========================================================
-    // Called by BasketTrigger when a flower enters the basket
+    // Collect flower (ONLY when basket is NOT locked)
     // =========================================================
     public void CollectFlower(GameObject flower)
     {
-        // ---------- Guard against double collection ----------
+        if (isSnappedToTable)
+            return;
+
         FlowerCollectedFlag flag = flower.GetComponent<FlowerCollectedFlag>();
         if (flag == null || flag.collected)
             return;
 
         flag.collected = true;
 
-        // ---------- Ignore collision between flower and basket body ----------
-        Collider flowerCollider = flower.GetComponent<Collider>();
-        if (flowerCollider != null && basketBodyCollider != null)
-        {
-            Physics.IgnoreCollision(flowerCollider, basketBodyCollider, true);
-        }
-
-        // ---------- Stop flower physics immediately ----------
-        Rigidbody rb = flower.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
-        }
-
-        // ---------- Get flower data ----------
         FlowerData data = flower.GetComponent<FlowerData>();
         if (data == null)
             return;
 
         FlowerType type = data.flowerType;
 
-        // ---------- Increase count ----------
         if (!counts.ContainsKey(type))
             counts[type] = 0;
 
@@ -65,25 +58,17 @@ public class BasketLogic : MonoBehaviour
 
         Debug.Log($"[Basket] Added {type}. Count = {counts[type]}");
 
-        // ---------- Create display if first flower ----------
         if (!displays.ContainsKey(type))
-        {
             CreateDisplay(type);
-        }
 
-        // ---------- Remove the real flower ----------
         Destroy(flower);
     }
 
-    // =========================================================
-    // Create visual (display-only) flower
-    // =========================================================
     void CreateDisplay(FlowerType type)
     {
         foreach (var s in slots)
         {
-            if (s.type != type)
-                continue;
+            if (s.type != type) continue;
 
             GameObject display = Instantiate(
                 s.displayPrefab,
@@ -93,74 +78,88 @@ public class BasketLogic : MonoBehaviour
             );
 
             displays[type] = display;
-
-            Debug.Log($"[Basket] Display created for {type}");
             return;
         }
-
-        Debug.LogWarning($"[Basket] No slot configured for {type}");
     }
 
     // =========================================================
-    // Called when player takes a flower from the basket
+    // Take flower OUT of basket
     // =========================================================
     public GameObject TakeFlower(FlowerType type, Transform handTransform)
     {
-        if (!counts.ContainsKey(type))
-            return null;
-
-        if (counts[type] <= 0)
+        if (!counts.ContainsKey(type) || counts[type] <= 0)
             return null;
 
         counts[type]--;
 
         Debug.Log($"[Basket] Took {type}. Count = {counts[type]}");
 
-        // ---------- Remove display if this was the last one ----------
         if (counts[type] == 0 && displays.ContainsKey(type))
         {
-            GameObject display = displays[type];
-
-            // Hide immediately (important for XR timing)
-            display.SetActive(false);
-
-            Debug.Log($"[Basket] Destroying display instance ID = {display.GetInstanceID()}");
-
-            Destroy(display);
+            Destroy(displays[type]);
             displays.Remove(type);
-
-            Debug.Log($"[Basket] Display removed for {type}");
         }
 
-        // ---------- Spawn real flower prefab ----------
+        // Unlock basket when empty
+        if (isSnappedToTable && GetTotalFlowerCount() == 0)
+            UnlockBasket();
+
         foreach (var s in slots)
         {
-            if (s.type != type)
-                continue;
+            if (s.type != type) continue;
 
-            if (s.realFlowerPrefab == null)
-            {
-                Debug.LogError($"[Basket] RealFlowerPrefab not assigned for {type}");
-                return null;
-            }
-
-            GameObject realFlower = Instantiate(
+            return Instantiate(
                 s.realFlowerPrefab,
                 handTransform.position,
                 handTransform.rotation
             );
-
-            return realFlower;
         }
 
         return null;
     }
 
     // =========================================================
-    // Optional helper
+    // Snap & lock basket
     // =========================================================
-    public int GetCount(FlowerType type)
+    public void SnapToTable(Transform snapPoint)
     {
-        return counts.ContainsKey(type) ? counts[type] : 0;
+        if (isSnappedToTable)
+            return;
+
+        isSnappedToTable = true;
+
+        // Force release if held
+        if (basketGrab.isSelected && basketGrab.interactionManager != null)
+        {
+            basketGrab.interactionManager.SelectExit(
+                basketGrab.firstInteractorSelecting,
+                basketGrab
+            );
+        }
+
+        transform.SetPositionAndRotation(
+            snapPoint.position,
+            snapPoint.rotation
+        );
+
+        basketGrab.enabled = false;
+
+        Debug.Log("[Basket] Snapped and locked");
+    }
+
+    void UnlockBasket()
+    {
+        isSnappedToTable = false;
+        basketGrab.enabled = true;
+
+        Debug.Log("[Basket] Unlocked (empty)");
+    }
+
+    int GetTotalFlowerCount()
+    {
+        int total = 0;
+        foreach (var kvp in counts)
+            total += kvp.Value;
+        return total;
     }
 }
