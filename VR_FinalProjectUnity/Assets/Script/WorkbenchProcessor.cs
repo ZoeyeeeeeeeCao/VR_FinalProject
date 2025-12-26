@@ -36,11 +36,14 @@ public class WorkbenchColorMixer : MonoBehaviour
     [Header("Debug")]
     public bool debugLog = true;
 
-    // 🔊 ADD: SFX
+    // 🔊 SFX
     [Header("SFX")]
     public AudioClip shovelHitSfx;   // O1
     public AudioClip powderSpawnSfx; // W2
-    private AudioSource audioSource;
+    public AudioClip errorSfx;        // ERROR
+
+    AudioSource audioSource;
+    bool errorPlaying;
 
     FlowerMode mode = FlowerMode.None;
     readonly HashSet<Transform> flowersInZone = new HashSet<Transform>();
@@ -56,8 +59,13 @@ public class WorkbenchColorMixer : MonoBehaviour
         if (flowerNotEnoughCanvas) flowerNotEnoughCanvas.SetActive(false);
         if (colorMismatchCanvas) colorMismatchCanvas.SetActive(false);
 
-        // 🔊 ADD: get AudioSource (NO logic change)
         audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f; // 2D error sound
     }
 
     void OnTriggerEnter(Collider other)
@@ -92,19 +100,14 @@ public class WorkbenchColorMixer : MonoBehaviour
 
             stirCount++;
 
-            // 🔊 ADD: play hit sound each valid shovel hit
-            if (audioSource != null && shovelHitSfx != null)
-            {
+            if (shovelHitSfx != null)
                 audioSource.PlayOneShot(shovelHitSfx);
-                Debug.Log("sound Play");
-            }
 
             if (debugLog) Debug.Log($"[Workbench] Stir {stirCount}/{requiredShovelEnters}");
 
             if (stirCount >= requiredShovelEnters)
-            {
                 ProcessToPowder();
-            }
+
             return;
         }
 
@@ -142,7 +145,6 @@ public class WorkbenchColorMixer : MonoBehaviour
         if (root.CompareTag(powderTag))
         {
             powderInside = false;
-            if (debugLog) Debug.Log("[Workbench] Powder removed -> can start new round when empty");
             TryResetIfEmpty();
             return;
         }
@@ -156,62 +158,48 @@ public class WorkbenchColorMixer : MonoBehaviour
         FlowerMode outgoing = GetFlowerModeByTag(root.tag);
         if (outgoing == FlowerMode.None) return;
 
-        bool removed = flowersInZone.Remove(root);
-        if (removed && debugLog) Debug.Log($"[Workbench] Flower left, remaining: {flowersInZone.Count}/{requiredFlowers}");
-
+        flowersInZone.Remove(root);
         stirCount = 0;
         TryResetIfEmpty();
     }
 
     void ProcessToPowder()
     {
-        if (powderInside) return;
-        if (mode == FlowerMode.None) return;
-        if (flowersInZone.Count < requiredFlowers) return;
+        if (powderInside || mode == FlowerMode.None || flowersInZone.Count < requiredFlowers)
+            return;
 
         GameObject powderPrefab = GetPowderPrefab(mode);
-        if (powderPrefab == null)
-        {
-            Debug.LogError("[Workbench] Powder prefab not assigned for mode: " + mode);
-            return;
-        }
+        if (powderPrefab == null) return;
 
-        List<Transform> toDestroy = new List<Transform>(requiredFlowers);
+        List<Transform> toDestroy = new List<Transform>();
         foreach (var f in flowersInZone)
         {
-            if (f != null) toDestroy.Add(f);
+            toDestroy.Add(f);
             if (toDestroy.Count >= requiredFlowers) break;
         }
-        if (toDestroy.Count < requiredFlowers) return;
 
         Vector3 pos = spawnPoint ? spawnPoint.position : toDestroy[0].position;
-        Quaternion rot = spawnPoint ? spawnPoint.rotation : Quaternion.identity;
+        Instantiate(powderPrefab, pos, Quaternion.identity);
 
-        Instantiate(powderPrefab, pos, rot);
-
-        // 🔊 ADD: play powder sound when powder spawns
-        if (audioSource != null && powderSpawnSfx != null)
+        if (powderSpawnSfx != null)
             audioSource.PlayOneShot(powderSpawnSfx);
 
         if (flowerSnapZone != null)
             flowerSnapZone.ResetSlotsAfterProcessing(false);
 
-        for (int i = 0; i < toDestroy.Count; i++)
-            if (toDestroy[i] != null) Destroy(toDestroy[i].gameObject);
+        foreach (var f in toDestroy)
+            if (f != null) Destroy(f.gameObject);
 
         flowersInZone.Clear();
         stirCount = 0;
-
-        if (debugLog) Debug.Log($"✅ Processed {mode} -> powder spawned. Workbench locked until powder removed.");
     }
 
     void TryResetIfEmpty()
     {
-        if (flowersInZone.Count == 0 && powderInside == false)
+        if (flowersInZone.Count == 0 && !powderInside)
         {
             mode = FlowerMode.None;
             stirCount = 0;
-            if (debugLog) Debug.Log("[Workbench] Reset to initial state (empty).");
         }
     }
 
@@ -219,7 +207,15 @@ public class WorkbenchColorMixer : MonoBehaviour
     {
         if (canvas == null) return;
 
-        if (popupRoutine != null) StopCoroutine(popupRoutine);
+        if (!errorPlaying && errorSfx != null)
+        {
+            audioSource.PlayOneShot(errorSfx);
+            errorPlaying = true;
+        }
+
+        if (popupRoutine != null)
+            StopCoroutine(popupRoutine);
+
         popupRoutine = StartCoroutine(PopupCo(canvas));
     }
 
@@ -231,6 +227,8 @@ public class WorkbenchColorMixer : MonoBehaviour
         canvas.SetActive(true);
         yield return new WaitForSeconds(popupDuration);
         if (canvas) canvas.SetActive(false);
+
+        errorPlaying = false;
         popupRoutine = null;
     }
 
@@ -255,7 +253,9 @@ public class WorkbenchColorMixer : MonoBehaviour
 
     Transform GetRoot(Collider col)
     {
-        if (col.attachedRigidbody != null) return col.attachedRigidbody.transform;
+        if (col.attachedRigidbody != null)
+            return col.attachedRigidbody.transform;
+
         return col.transform.root;
     }
 }
