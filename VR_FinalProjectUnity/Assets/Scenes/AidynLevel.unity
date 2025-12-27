@@ -16917,7 +16917,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &397674896
 RectTransform:
   m_ObjectHideFlags: 0
@@ -74888,7 +74888,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1141424917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102282,7 +102282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 465107203}
-  distance: 0.7
+  distance: 1
   heightOffset: -0.1
   followWhileActive: 1
 --- !u!114 &1779009415
@@ -102376,7 +102376,7 @@ RectTransform:
   m_GameObject: {fileID: 1779009413}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2.3486462}
-  m_LocalScale: {x: 0.01775524, y: 0.0115982415, z: 0.016334167}
+  m_LocalScale: {x: 0.012000944, y: 0.007839368, z: 0.011040427}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 112142042}
@@ -120378,7 +120378,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 790049037}
         m_TargetAssemblyTypeName: PaintModeManager, Assembly-CSharp
-        m_MethodName: CancelEnterPaint
+        m_MethodName: CancelExitPaint
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -120847,7 +120847,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 790049037}
         m_TargetAssemblyTypeName: PaintModeManager, Assembly-CSharp
-        m_MethodName: ConfirmEnterPaint
+        m_MethodName: ConfirmExitPaint
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -121425,7 +121425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 465107203}
-  distance: 0.7
+  distance: 1
   heightOffset: -0.1
   followWhileActive: 1
 --- !u!114 &2068837165
@@ -121519,7 +121519,7 @@ RectTransform:
   m_GameObject: {fileID: 2068837163}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2.3486462}
-  m_LocalScale: {x: 0.01775524, y: 0.0115982415, z: 0.016334167}
+  m_LocalScale: {x: 0.012000944, y: 0.007839368, z: 0.011040427}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1803213604}
