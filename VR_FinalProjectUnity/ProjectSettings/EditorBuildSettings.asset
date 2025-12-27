@@ -5,18 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Level1 copy UI.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: a965f045e0f774bd99c80da64b4eefd6
   - enabled: 1
     path: Assets/Scenes/Level1.unity
     guid: 684ae0e5068f3d941be693d4d6c07fad
   - enabled: 1
-    path: Assets/Scenes/AidynLevel.unity
+    path: Assets/Scenes/Level2.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/TheEnd.unity
+    guid: 376ebc45296409b4593390328ff3ecb7
   m_configObjects:
     Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: 7b716d9b0df9d464580f00d25be82042,
       type: 2}

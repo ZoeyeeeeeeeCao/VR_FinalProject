@@ -334,7 +334,7 @@ GameObject:
   - component: {fileID: -8468497472195245128}
   m_Layer: 0
   m_Name: 'DisplaypeaceLily '
-  m_TagString: Untagged
+  m_TagString: FlowerBlue
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
