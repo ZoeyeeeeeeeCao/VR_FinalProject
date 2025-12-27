@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 681816968495296083}
   m_Layer: 0
   m_Name: SM_Rosaceae_Mesh.002_RoseClimber_INST
-  m_TagString: Untagged
+  m_TagString: FlowerRed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -10,12 +11,12 @@ public class QuakeController : MonoBehaviour
     public XRGrabInteractable[] apartmentCanvasGrabs;
 
     public float dropImpulse = 0.15f;
+    public float reKinematicDelay = 5f;
 
     public void Begin()
     {
         if (level2Group) level2Group.SetActive(false);
 
-        // keep them ungrabbable during cinematic
         foreach (var g in apartmentCanvasGrabs)
             if (g) g.enabled = false;
 
@@ -27,20 +28,33 @@ public class QuakeController : MonoBehaviour
         foreach (var rb in apartmentCanvasRBs)
         {
             if (!rb) continue;
+
             rb.transform.SetParent(null, true);
             rb.isKinematic = false;
             rb.useGravity = true;
             rb.AddForce(Random.insideUnitSphere * dropImpulse, ForceMode.Impulse);
+
+            StartCoroutine(SetKinematicLater(rb, reKinematicDelay));
         }
 
         Debug.Log("QUAKE DROP called");
+    }
+
+    private IEnumerator SetKinematicLater(Rigidbody rb, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (!rb) yield break;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+        rb.useGravity = false;
     }
 
     public void End()
     {
         if (level3Group) level3Group.SetActive(true);
 
-        // now the player can pick them up and re-socket
         foreach (var g in apartmentCanvasGrabs)
             if (g) g.enabled = true;
 
