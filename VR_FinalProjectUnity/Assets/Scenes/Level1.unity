@@ -46945,8 +46945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 933713534}
-  distance: 1.5
-  heightOffset: -0.5
+  distance: 2
+  heightOffset: -0.4
   followWhileActive: 0
 --- !u!1 &2084321575
 GameObject:
