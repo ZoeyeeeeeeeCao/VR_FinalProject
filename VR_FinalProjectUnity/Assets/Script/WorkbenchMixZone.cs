@@ -234,6 +234,7 @@ public AudioSource sfxSource;        // optional (or auto-find)
         }
 
         Instantiate(prefab, powderSnap.position, powderSnap.rotation);
+        PaintProgressManager.Instance.RegisterPaintSpawned();
         PlaySfx(paintAppearSfx);
         Destroy(currentPowder);
         
