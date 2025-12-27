@@ -13,6 +13,8 @@ public class QuakeController : MonoBehaviour
     public float dropImpulse = 0.15f;
     public float reKinematicDelay = 5f;
 
+    public float endDelay = 5f;   // ?? delay before End logic runs
+
     public void Begin()
     {
         if (level2Group) level2Group.SetActive(false);
@@ -51,13 +53,22 @@ public class QuakeController : MonoBehaviour
         rb.useGravity = false;
     }
 
+    // ?? End is now delayed
     public void End()
     {
+        StartCoroutine(EndDelayed());
+    }
+
+    private IEnumerator EndDelayed()
+    {
+        Debug.Log("QUAKE End called ¡ª waiting " + endDelay + " seconds...");
+        yield return new WaitForSeconds(endDelay);
+
         if (level3Group) level3Group.SetActive(true);
 
         foreach (var g in apartmentCanvasGrabs)
             if (g) g.enabled = true;
 
-        Debug.Log("QUAKE END called");
+        Debug.Log("QUAKE END logic executed");
     }
 }

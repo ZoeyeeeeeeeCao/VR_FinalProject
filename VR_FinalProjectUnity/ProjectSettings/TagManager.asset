@@ -13,6 +13,7 @@ TagManager:
   - Powder
   - Kettle
   - Default
+  - PlayerCanvas
   layers:
   - Default
   - TransparentFX
