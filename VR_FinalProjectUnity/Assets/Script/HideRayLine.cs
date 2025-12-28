@@ -9,4 +9,9 @@ public class HideRayLine : MonoBehaviour
     {
         if (lineVisual) lineVisual.enabled = false;
     }
+
+   /* public void ShowRay()
+    {
+        if (lineVisual) lineVisual.enabled = true;
+    } */
 }

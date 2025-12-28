@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -12,12 +12,19 @@ public class QuakeController : MonoBehaviour
 
     public float dropImpulse = 0.15f;
     public float reKinematicDelay = 5f;
+    public float endDelay = 5f;
 
-    public float endDelay = 5f;   // ?? delay before End logic runs
+  //  public HideRayLine hideRayLine;
+
+    // 👇 NEW: Empty GameObject to toggle
+    public GameObject toggleObject;
 
     public void Begin()
     {
         if (level2Group) level2Group.SetActive(false);
+
+        // 👇 Disable the empty GameObject at Begin
+        if (toggleObject) toggleObject.SetActive(false);
 
         foreach (var g in apartmentCanvasGrabs)
             if (g) g.enabled = false;
@@ -53,18 +60,23 @@ public class QuakeController : MonoBehaviour
         rb.useGravity = false;
     }
 
-    // ?? End is now delayed
     public void End()
     {
         StartCoroutine(EndDelayed());
+
+       // if (hideRayLine)
+           // hideRayLine.ShowRay();
     }
 
     private IEnumerator EndDelayed()
     {
-        Debug.Log("QUAKE End called �� waiting " + endDelay + " seconds...");
+        Debug.Log("QUAKE End called — waiting " + endDelay + " seconds...");
         yield return new WaitForSeconds(endDelay);
 
         if (level3Group) level3Group.SetActive(true);
+
+        // 👇 Re-enable the empty GameObject at End
+        if (toggleObject) toggleObject.SetActive(true);
 
         foreach (var g in apartmentCanvasGrabs)
             if (g) g.enabled = true;

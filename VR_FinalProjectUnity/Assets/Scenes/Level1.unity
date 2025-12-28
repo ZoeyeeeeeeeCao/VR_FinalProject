@@ -11258,7 +11258,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: FLOWER NOT ENOUGH!
+  m_text: NOT ENOUGHT FLOWERS!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b6fcc7095d526814da9ecc414c42c70f, type: 2}
   m_sharedMaterial: {fileID: -8308055829361174225, guid: b6fcc7095d526814da9ecc414c42c70f,
@@ -26087,7 +26087,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Read instructions carefully...
+  m_text: Read the instructions carefully...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b6fcc7095d526814da9ecc414c42c70f, type: 2}
   m_sharedMaterial: {fileID: -8308055829361174225, guid: b6fcc7095d526814da9ecc414c42c70f,
@@ -42181,7 +42181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Read instructions carefully...
+  m_text: Read the instructions carefully...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b6fcc7095d526814da9ecc414c42c70f, type: 2}
   m_sharedMaterial: {fileID: -8308055829361174225, guid: b6fcc7095d526814da9ecc414c42c70f,
