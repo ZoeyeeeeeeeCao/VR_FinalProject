@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class WorkbenchMixZone : MonoBehaviour
 {
     [Header("SFX")]
-public AudioClip paintAppearSfx;     // drag click2 here
-public AudioSource sfxSource;        // optional (or auto-find)
+    public AudioClip paintAppearSfx;     // drag click2 here
+    public AudioSource sfxSource;        // optional (or auto-find)
 
     [System.Serializable]
     public class OutputMap
@@ -24,13 +25,16 @@ public AudioSource sfxSource;        // optional (or auto-find)
     public OutputMap[] outputs;
 
     [Header("Kettle Detect")]
-    public string kettleTag = "Kettle";
+    public string kettleTag = "Kettle"; // 给水壶 root 设置 Tag=Kettle（更稳）
 
     [Header("Animator")]
-    public string pourTrigger = "Pour";
+    public string pourTrigger = "Pour"; // Animator Trigger 参数名（你 Animator 里要有同名 Trigger）
 
     [Header("Options")]
     public bool lockGrabbableWhileSnapped = true;
+
+    [Header("Debug")]
+    public bool debugLog = true;
 
     GameObject currentPowder;
     PowderType currentPowderType;
@@ -40,9 +44,14 @@ public AudioSource sfxSource;        // optional (or auto-find)
 
     bool busy;
 
+    // kettle original rigidbody state
     Rigidbody kettleRb;
     bool kettleRbHad;
     bool kettleRbWasKinematic;
+
+    // kettle grab release bookkeeping (so Snap overrides Grab)
+    XRGrabInteractable kettleGrab;
+    IXRSelectInteractor kettlePrevInteractor;
 
     void Reset()
     {
@@ -56,59 +65,67 @@ public AudioSource sfxSource;        // optional (or auto-find)
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"[WorkbenchMixZone] OnTriggerEnter by: {other.name}");
+        if (debugLog) Debug.Log($"[WorkbenchMixZone] OnTriggerEnter by: {other.name}");
 
         if (busy)
         {
-            Debug.Log("[WorkbenchMixZone] ❌ Busy, ignore trigger");
+            if (debugLog) Debug.Log("[WorkbenchMixZone] ❌ Busy, ignore trigger");
             return;
         }
 
-        // 1️⃣ 粉末检测
+        // 1) 粉末检测
         var pType = other.GetComponentInParent<PowderType>();
         if (pType != null)
         {
-            Debug.Log($"[WorkbenchMixZone] ✅ Powder detected: {pType.name}");
+            if (debugLog) Debug.Log($"[WorkbenchMixZone] ✅ Powder detected: {pType.name}");
             TryAcceptPowder(pType.gameObject, pType);
             return;
         }
 
-        // 2️⃣ 水壶检测
+        // 2) 水壶检测
         if (currentPowder == null)
         {
-            Debug.Log("[WorkbenchMixZone] ℹ️ No powder yet, kettle ignored");
+            if (debugLog) Debug.Log("[WorkbenchMixZone] ℹ️ No powder yet, kettle ignored");
             return;
         }
 
         var kettleRoot = other.transform.root;
-        Debug.Log($"[WorkbenchMixZone] Kettle candidate root: {kettleRoot.name}");
+
+        if (debugLog) Debug.Log($"[WorkbenchMixZone] Kettle candidate root: {kettleRoot.name} tag={kettleRoot.tag}");
 
         if (!string.IsNullOrEmpty(kettleTag) && !kettleRoot.CompareTag(kettleTag))
         {
-            Debug.Log($"[WorkbenchMixZone] ❌ Root tag mismatch: {kettleRoot.tag}");
+            if (debugLog) Debug.Log($"[WorkbenchMixZone] ❌ Root tag mismatch: {kettleRoot.tag}");
             return;
         }
 
-        Debug.Log("[WorkbenchMixZone] ✅ Kettle accepted, start process");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] ✅ Kettle accepted, start process");
         TryStartKettleProcess(kettleRoot);
     }
 
+    // ---------------- Powder ----------------
     void TryAcceptPowder(GameObject powderObj, PowderType pType)
     {
         if (currentPowder != null) return;
 
+        if (powderSnap == null)
+        {
+            Debug.LogError("[WorkbenchMixZone] ❌ powderSnap not assigned!");
+            return;
+        }
+
         currentPowder = powderObj;
         currentPowderType = pType;
 
-        // 1) 强制取消抓取（很关键）
+        // 强制取消抓取（如果正在抓）
         var grab = powderObj.GetComponentInChildren<XRGrabInteractable>();
-        if (grab != null && grab.isSelected)
+        if (grab != null && grab.isSelected && grab.firstInteractorSelecting != null)
         {
             var mgr = FindObjectOfType<XRInteractionManager>();
             if (mgr != null) mgr.SelectExit(grab.firstInteractorSelecting, grab);
         }
 
-        // 2) 关物理避免抖动/弹走
+        // 关物理避免抖动/弹走
         var rb = powderObj.GetComponent<Rigidbody>();
         if (rb == null) rb = powderObj.GetComponentInChildren<Rigidbody>();
         if (rb != null)
@@ -118,26 +135,34 @@ public AudioSource sfxSource;        // optional (or auto-find)
             rb.isKinematic = true;
         }
 
-        // 3) Snap 到目标
+        // Snap 到目标
         powderObj.transform.SetPositionAndRotation(powderSnap.position, powderSnap.rotation);
 
-        // 4) 禁用 grab（可选）
+        // 禁用 grab（可选）
         if (lockGrabbableWhileSnapped && grab != null)
             grab.enabled = false;
 
-        Debug.Log($"[WorkbenchMixZone] ✅ Powder snapped to {powderSnap.position}");
-        Debug.Log($"PowderSnap local: {powderSnap.localPosition}  world: {powderSnap.position}");
-
+        if (debugLog)
+        {
+            Debug.Log($"[WorkbenchMixZone] ✅ Powder snapped to {powderSnap.position}");
+            Debug.Log($"[WorkbenchMixZone] PowderSnap local: {powderSnap.localPosition}  world: {powderSnap.position}");
+        }
     }
 
-
+    // ---------------- Kettle process ----------------
     void TryStartKettleProcess(Transform kettleRoot)
     {
-        Debug.Log("[WorkbenchMixZone] ▶ TryStartKettleProcess");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] ▶ TryStartKettleProcess");
 
         if (busy)
         {
-            Debug.Log("[WorkbenchMixZone] ❌ Already busy");
+            if (debugLog) Debug.Log("[WorkbenchMixZone] ❌ Already busy");
+            return;
+        }
+
+        if (kettleSnapIn == null || kettleSnapOut == null)
+        {
+            Debug.LogError("[WorkbenchMixZone] ❌ kettleSnapIn / kettleSnapOut not assigned!");
             return;
         }
 
@@ -153,8 +178,9 @@ public AudioSource sfxSource;        // optional (or auto-find)
             return;
         }
 
-        Debug.Log("[WorkbenchMixZone] 🎬 Animator found");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] 🎬 Animator found");
 
+        // 记录并设为 Kinematic，避免吸附抖动
         kettleRb = kettleRoot.GetComponent<Rigidbody>();
         kettleRbHad = kettleRb != null;
 
@@ -164,24 +190,30 @@ public AudioSource sfxSource;        // optional (or auto-find)
             kettleRb.velocity = Vector3.zero;
             kettleRb.angularVelocity = Vector3.zero;
             kettleRb.isKinematic = true;
-            Debug.Log("[WorkbenchMixZone] Rigidbody set to kinematic");
+            if (debugLog) Debug.Log("[WorkbenchMixZone] Rigidbody set to kinematic");
         }
 
-        Debug.Log("[WorkbenchMixZone] 📌 Snapping kettle IN");
-        SnapTo(kettleRoot, kettleSnapIn, false);
+        // ✅ 关键：先强制退出抓取，否则 Grab 会每帧把水壶拉回手上，导致“看起来没吸附”
+        ForceReleaseGrab(kettleRoot);
 
+        // 再锁 grab（避免立刻又被抓回去）
         if (lockGrabbableWhileSnapped)
             SetGrabEnabled(kettleRoot.gameObject, false);
 
-        Debug.Log("[WorkbenchMixZone] 🔥 Trigger animation");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] 📌 Snapping kettle IN");
+        SnapTo(kettleRoot, kettleSnapIn);
+
+        if (debugLog) Debug.Log("[WorkbenchMixZone] 🔥 Trigger animation");
         currentKettleAnimator.ResetTrigger(pourTrigger);
         currentKettleAnimator.SetTrigger(pourTrigger);
+
+        // ⚠️ 后续结束逻辑由动画最后一帧 Animation Event 调用 OnPourFinished()
     }
 
-    // 🔔 Animation Event 调这个
+    // 🔔 在 WaterAnima 动画最后一帧加 Animation Event 调这个
     public void OnPourFinished()
     {
-        Debug.Log("[WorkbenchMixZone] ⏹ OnPourFinished called");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] ⏹ OnPourFinished called");
 
         if (!busy)
         {
@@ -196,27 +228,35 @@ public AudioSource sfxSource;        // optional (or auto-find)
             return;
         }
 
-        Debug.Log("[WorkbenchMixZone] 📌 Snapping kettle OUT");
-        SnapTo(currentKettleRoot, kettleSnapOut, false);
+        if (debugLog) Debug.Log("[WorkbenchMixZone] 📌 Snapping kettle OUT");
+        SnapTo(currentKettleRoot, kettleSnapOut);
 
-        Debug.Log("[WorkbenchMixZone] 🎨 Spawning paint");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] 🎨 Spawning paint");
         SpawnPaintAndConsumePowder();
 
+        // 解锁 grab
         if (lockGrabbableWhileSnapped)
             SetGrabEnabled(currentKettleRoot.gameObject, true);
 
+        // 恢复水壶原本 kinematic
         if (kettleRbHad && kettleRb != null)
             kettleRb.isKinematic = kettleRbWasKinematic;
 
+        // 清理
         currentKettleRoot = null;
         currentKettleAnimator = null;
+
         kettleRb = null;
         kettleRbHad = false;
 
+        kettleGrab = null;
+        kettlePrevInteractor = null;
+
         busy = false;
-        Debug.Log("[WorkbenchMixZone] ✅ Process finished");
+        if (debugLog) Debug.Log("[WorkbenchMixZone] ✅ Process finished");
     }
 
+    // ---------------- Spawn output ----------------
     void SpawnPaintAndConsumePowder()
     {
         if (currentPowder == null || currentPowderType == null)
@@ -229,15 +269,20 @@ public AudioSource sfxSource;        // optional (or auto-find)
 
         if (prefab == null)
         {
-            Debug.LogError($"[WorkbenchMixZone] ❌ No prefab for {currentPowderType.kind}");
+            Debug.LogError($"[WorkbenchMixZone] ❌ No paint prefab mapped for kind: {currentPowderType.kind}");
             return;
         }
 
         Instantiate(prefab, powderSnap.position, powderSnap.rotation);
-        PaintProgressManager.Instance.RegisterPaintSpawned();
+
+        // 你自己的进度系统
+        if (PaintProgressManager.Instance != null)
+            PaintProgressManager.Instance.RegisterPaintSpawned();
+
+        // SFX
         PlaySfx(paintAppearSfx);
+
         Destroy(currentPowder);
-        
 
         currentPowder = null;
         currentPowderType = null;
@@ -250,7 +295,33 @@ public AudioSource sfxSource;        // optional (or auto-find)
         return null;
     }
 
-    static void SnapTo(Transform obj, Transform target, bool setKinematic)
+    // ---------------- Helpers ----------------
+    void ForceReleaseGrab(Transform root)
+    {
+        kettleGrab = root.GetComponentInChildren<XRGrabInteractable>();
+        if (kettleGrab == null)
+        {
+            if (debugLog) Debug.LogWarning("[WorkbenchMixZone] ⚠️ Kettle has no XRGrabInteractable (can't force release).");
+            return;
+        }
+
+        // 防止“松手自动回父物体”的奇怪行为（可选，但保险）
+        kettleGrab.retainTransformParent = false;
+
+        kettlePrevInteractor = kettleGrab.firstInteractorSelecting;
+
+        if (kettleGrab.isSelected && kettlePrevInteractor != null)
+        {
+            var mgr = FindObjectOfType<XRInteractionManager>();
+            if (mgr != null)
+            {
+                if (debugLog) Debug.Log("[WorkbenchMixZone] ✋ Force release kettle grab");
+                mgr.SelectExit(kettlePrevInteractor, kettleGrab);
+            }
+        }
+    }
+
+    static void SnapTo(Transform obj, Transform target)
     {
         if (obj == null || target == null)
         {
@@ -258,9 +329,13 @@ public AudioSource sfxSource;        // optional (or auto-find)
             return;
         }
 
+        // 如果 obj 上还有刚体，清一下速度（更稳）
         var rb = obj.GetComponent<Rigidbody>();
-        if (rb != null && setKinematic)
-            rb.isKinematic = true;
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
 
         obj.position = target.position;
         obj.rotation = target.rotation;
@@ -271,19 +346,19 @@ public AudioSource sfxSource;        // optional (or auto-find)
         var grab = go.GetComponentInChildren<XRGrabInteractable>();
         if (grab != null) grab.enabled = enabled;
     }
+
     void PlaySfx(AudioClip clip)
-{
-    if (clip == null) return;
-
-    if (sfxSource == null)
     {
-        sfxSource = GetComponent<AudioSource>();
-        if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
-        sfxSource.playOnAwake = false;
-        sfxSource.spatialBlend = 0f; // 2D
+        if (clip == null) return;
+
+        if (sfxSource == null)
+        {
+            sfxSource = GetComponent<AudioSource>();
+            if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
+            sfxSource.playOnAwake = false;
+            sfxSource.spatialBlend = 0f; // 2D（如果你想3D就改成 1）
+        }
+
+        sfxSource.PlayOneShot(clip);
     }
-
-    sfxSource.PlayOneShot(clip);
-}
-
 }

@@ -2134,7 +2134,8 @@ MonoBehaviour:
       type: 3}
   kettleTag: Kettle
   pourTrigger: Pour
-  lockGrabbableWhileSnapped: 0
+  lockGrabbableWhileSnapped: 1
+  debugLog: 1
 --- !u!82 &124036139
 AudioSource:
   m_ObjectHideFlags: 0
