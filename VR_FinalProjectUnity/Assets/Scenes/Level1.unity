@@ -6050,8 +6050,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.6002398, y: 0.12599464, z: 2.573417}
-  m_Center: {x: -0.022349512, y: 1.7836185, z: -0.008939551}
+  m_Size: {x: 2.6002398, y: 0.14857055, z: 2.573417}
+  m_Center: {x: -0.022349512, y: 1.7949064, z: -0.008939551}
 --- !u!114 &329188467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19102,7 +19102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1767192439, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 55
+      value: 63
       objectReference: {fileID: 0}
     - target: {fileID: 58445280694286476, guid: f6336ac4ac8b4d34bc5072418cdc62a0,
         type: 3}
@@ -23212,7 +23212,7 @@ PrefabInstance:
     - target: {fileID: 3738181026152085607, guid: 24042fd7b94f31440811b9323881f0fc,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
