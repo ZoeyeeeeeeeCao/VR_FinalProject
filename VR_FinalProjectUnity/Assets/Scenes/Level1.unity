@@ -1147,8 +1147,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Next
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 289f9d5ab5192ed42a5a11de78eece8c, type: 2}
-  m_sharedMaterial: {fileID: -1631404238548892136, guid: 289f9d5ab5192ed42a5a11de78eece8c,
+  m_fontAsset: {fileID: 11400000, guid: b6fcc7095d526814da9ecc414c42c70f, type: 2}
+  m_sharedMaterial: {fileID: -8308055829361174225, guid: b6fcc7095d526814da9ecc414c42c70f,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1173,8 +1173,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 13
+  m_fontSizeBase: 13
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -13677,8 +13677,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Well done! You\u2019ve gathered 3 paints \u2014 drawing is now unlocked."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 289f9d5ab5192ed42a5a11de78eece8c, type: 2}
-  m_sharedMaterial: {fileID: -1631404238548892136, guid: 289f9d5ab5192ed42a5a11de78eece8c,
+  m_fontAsset: {fileID: 11400000, guid: b6fcc7095d526814da9ecc414c42c70f, type: 2}
+  m_sharedMaterial: {fileID: -8308055829361174225, guid: b6fcc7095d526814da9ecc414c42c70f,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -13703,8 +13703,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 11
-  m_fontSizeBase: 11
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -23789,7 +23789,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1096569468
 MonoBehaviour:
   m_ObjectHideFlags: 0
